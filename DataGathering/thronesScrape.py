@@ -10,10 +10,7 @@ import re
 import pandas as pd
 from selenium import webdriver
 import requests as rq
-#import sys
 
-
-#sys.setrecursionlimit(1500)
 
 def gotThrones(season):
 	url = 'http://genius.com/albums/Game-of-thrones/Season-'+str(season)+'-scripts'
@@ -43,7 +40,8 @@ def episodeScraper(ep):
 	body = b.find('div', attrs={'class' : 'lyrics'})
 	dialogue = re.split('\n', body.text)
 	episode = re.sub('by.*','',ep[0])
-	pattern = re.compile(r'(?:INT)|(?:EXT)')
+	pattern1 = re.compile(r'(?:INT)|(?:EXT)')
+	pattern2 = re.compile(r'[^A-Z.\s\:-]')
 	state = 0
 	count = 0
 	for line in dialogue:
@@ -51,8 +49,9 @@ def episodeScraper(ep):
 				if line == '':
 					pass
 				else:
-				  m = re.search(pattern,line.encode('ascii','ignore'))
-				  if m:
+				  m = re.search(pattern1,line.encode('ascii','ignore'))
+				  m2 = re.search(pattern2,line.encode('ascii','ignore'))
+				  if m and m2 is None:
 				  		setting = line
 						state = 1
 						count +=1									
@@ -75,10 +74,10 @@ def episodeScraper(ep):
 								sentences = regexline.group(2)
 								charactercollection.append([episode,character,sentences,len(sentences)])
 	return pd.DataFrame(charactercollection, columns = ['episode','character','line','linelength','setting','settingcount'])
-	print line
+
 	
 seasonfive = gotThrones(5)
-GOTdataDfs = [episodeScraper(ep) for ep in seasonfive.items()]
+GOTdataDfs2 = pd.concat([episodeScraper(ep) for ep in seasonfive.items()])
  
 									
 																																

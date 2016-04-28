@@ -30,10 +30,7 @@ def gotThrones(season):
             epurl = link['href']
             eptitle = link['title']
             episodedict[eptitle] = epurl
-    return episodedict
-    
-    
-        
+    return episodedict				        
 
 def episodeScraper(ep):
 	driver = webdriver.PhantomJS('/Users/dheepan.ramanan/Documents/Resources/phantomjs-2.1.1-macosx/bin/phantomjs')
@@ -51,7 +48,7 @@ def episodeScraper(ep):
                     pass
                 else:
 		         m = re.search(pattern,line)
-			if m == None:
+			   if m == None:
                         setting = line
                         state = 1
                         count +=1									
